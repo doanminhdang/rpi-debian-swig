@@ -1,0 +1,14 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker pull resin/raspberrypi3-debian:stretch
+  - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+  - docker build -t rpi-debian-swig .
+  - docker tag rpi-debian-swig $DOCKER_ORGANIZATION/rpi-debian-swig:latest
+
+script:
+  - docker push $DOCKER_ORGANIZATION/rpi-debian-swig:latest
